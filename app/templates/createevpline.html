@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}j
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Create EVP-Line</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if PEERLbkIP != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p>logical-ports logical-port {{ uniPort }} admin-state enable</p>
+                <p class="text-primary"># Enable Targetted LDP Control session to Peer</p>
+                <p>ldp instance default target-ldp peers {{ PEERLbkIP }}</p>
+                <p>apply</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p class="text-primary"># Create MPLS pseudowires</p>
+                <p>pseudowires pseudowire svc{{ cVid }}-1 configured-pw peer-ip {{ PEERLbkIP }} pw-id {{ cVid }}</p>
+                <p>pseudowires pseudowire svc{{ cVid }}-1 stats-collection on</p>
+                <p>apply</p>
+                <p class="text-primary"># Create Classifer, Forwarding-Domain and Flow-Point</p>
+                <p>classifiers classifier VLAN{{ cVid }} filter-entry vtag-stack vtags 1 vlan-id {{ cVid }}</p>
+                <p>fds fd svc{{ cVid }} mode vpls</p>
+                <p>fps fp svc{{ cVid }}-p{{ uniPort }}
+                <p>stats-collection on</p>
+                <p>fd-name svc{{ cVid }}</p>
+                <p>logical-port {{ uniPort }}</p>
+                <p>classifier-list-precedence {{ cVid }}</p>
+                <p>classifier-list VLAN{{ cVid }}</p>
+                <p>mtu-size 9216</p>
+                <p>apply</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p class="text-primary"># Create L2VPN and biond to forwarding-domain and pseudowire</p>
+                <p>l2vpn-services l2vpn svc{{ cVid }} service-type vlan signaling-type ldp forwarding-domain svc{{ cVid }} pseudowire svc{{ cVid }}-1</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

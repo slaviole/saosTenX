@@ -1,0 +1,139 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+    {{super()}}
+    <!--    <link rel="stylesheet" href="static/styles.css" type="text/css" />-->
+{% endblock %}
+
+
+{% block title %}SAOS TenX{% endblock %}
+
+<div class="container">
+{% block navbar %}
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>               
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">MyTenX_GUI</a>
+            
+            {#            <a class="navbar-brand" href="/"><img src="images/s3packet.jpg"/></a> #}
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">CLI Gen<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="text-primary">---Startup---</li>
+                        <li><a href="/sethostname">Hostname</a></li>
+                        <li><a href="/oobmgmt">OOB Mgmt</a></li>
+                        <li><a href="/addntp">NTP Server</a></li>
+                        <li><a href="/addlicenseserver">License Server</a></li>
+           {#           <li><a href="/genregid">Generate Regid</a></li> #}
+
+                        <li class="text-primary">---Transport Infratructure-</li>
+                        <li><a href="/createlbk">1-Create Loopback</a></li>
+                        <li><a href="/createisis">2-Create ISIS Instance</a></li>
+                        <li><a href="/createport">3-Create DataPort</a></li>
+         {#             <li><a href="/addipbfd">IP BFD</a></li> #}
+
+                        <li class="text-primary">---Segment-Routing---</li>
+                        <li><a href="/addsr">Segment Routing/TI-LFA</a></li>:
+           {#           <li><a href="/addldp">LDP</a></li> #}
+
+                        <li class="text-primary">---L2VPN(VPWS)---</li>
+                        <li><a href="/enabletldp">Enable Targetted LDP</a></li>
+                        <li><a href="/createevpline">Create EVP-Line</a></li>
+
+                        <li class="text-primary">---BGP---</li>
+                        <li><a href="/addbgp">Add BGP Instance</a></li>
+                        <li><a href="/addbgppeer">Add BGP Peer</a></li>{# Adds vpnv4 unicast address-family #}
+
+                        <li class="text-primary">---EVPN(VPWS)---</li>
+                        <li><a href="/createevpnvpws">Create EVPN-VPWS</a></li>
+
+                        <li class="text-primary">---L3VPN---</li>
+                        <li><a href="/createl3vpn">Create L3 VPN</a></li>
+
+                        <li class="text-primary">---FlexE---</li>
+                        <li><a href="/createFlexE">Create FlexE Service</a></li>
+
+                        <li class="text-primary">---Misc---</li>
+                        <li><a href="/setettps">Port Settings</a></li>
+           {#           <li><a href="/adduser">Add User</a></li>          #}
+                    </ul>
+                </li>
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">vEdge CLI Gen<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="text-primary">---Base NID Config---</li>
+                        <li><a href="/base6x">6.x Base Setup</a></li>
+                        {#                       <li><a href="/versa6x">6.x Versa config</a></li> #}
+                        <li><a href="/vyos6x">6.x Vyos config</a></li>
+                        <li class="text-primary">---Compute Module Config---</li>
+                        <li><a href="/vEdgeBase">Base config</a></li>
+                        <li><a href="/vyosDownload">Vyos VNF Download</a></li>
+                        <li class="text-primary">---VNF and Service Chain--</li>
+                        <li><a href="/vnfspec">VNF Specifications</a></li>
+                        <li><a href="/createclassifier">Create Classifier</a></li>
+                        <li><a href="/createsff">Create Service Chain</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">MCP Scripts<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/configevpl">Config EVP-Line</a></li>
+                        <li><a href="/deleteevpl">Delete EVP-Line</a></li>
+                        <li><a href="/configevplaz">Config EVP-Line A-Z</a></li>
+                        <li><a href="/deleteevplaz">Delete EVP-Line A-Z</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">S3 Lab Admin<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/backupnodes">Node Backup</a></li>
+                        <li><a href="/restore">Node Restore</a></li>
+                    </ul>
+                </li>
+
+                
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/showcfg">Device Browser</a></li>
+                        <li><a href="/addnode">Add Device</a></li>
+                        <li><a href="/deletenode">Delete Device</a></li>
+                        <li><a href="/nc_createclassifier">Create Classifier</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+    {% endblock %}
+
+    {% block inputBlock %}
+        <div class="container">
+            <div class="well well-sm">
+                <div class="form-inline">
+                   {{ wtf.quick_form(form) }}
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block outputBlock %}
+    {% endblock %}
+
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+

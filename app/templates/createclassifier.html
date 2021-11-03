@@ -1,0 +1,72 @@
+{% extends "base.html" %} {% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Create Classifier</h1>
+        </div>
+        <br>
+    {% endblock %}
+     <br>
+     <br>
+     <script src="https:///unpkg.com/vue" ></script>
+
+     {# ---- Input Block ----#}
+     <div id="app" class="container">
+         <div class="well well-sm">
+             <form class="form-inline">
+                 <div class="form-group">
+                     <label for="classifierName">Classifier Name</label>
+                     <input v-model="form.classifierName" id="classifierName"/>
+                 </div>
+                 <div class="form-group" v-show="!form.isUntagged">
+                     <label for="vlanid">VLAN ID</label>
+                     <input v-model="form.vlanid" id="vlanid"/>
+                 </div>
+                  <div class="form-group">
+                     <label for="isUntagged">Untagged?</label>
+                     <input v-model="form.isUntagged" id="isUntagged" type="checkbox"/>
+                 </div>
+             </form>
+         </div>
+
+        {# ---- Output Block ----#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+
+              <p v-show="!form.isUntagged">classifiers classifier [[ form.classifierName ]] filter-entry vtag-stack 1 vtags 1 vlan-id [[ form.vlanid ]]</p>
+              <p v-show="form.isUntagged">classifiers classifier [[ form.classifierName ]] filter-entry vtag-stack untagged-exclude-priority-tagged true</p>
+
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+
+
+     </div>
+
+ <script type="text/javascript" charset="utf-8">
+     var inputClassifier = new Vue({
+         el: "#app",
+         delimiters: ['[[', ']]'],
+         data: {
+             form: {
+                 isUntagged: false,
+                 vlanid: '20',
+                 classifierName: 'ClassifierName'
+             }
+         }
+     })
+ </script>
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

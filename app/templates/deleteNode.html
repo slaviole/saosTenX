@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+            <h1>Delete Device from the Database</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }}
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                NODES IN DATABASE
+            </div>
+            <div class="panel-body" id="clioutput">
+                {% for node in nodelist %}
+                    <p><b>{{ node.nodeName }}</b></p>
+                    <p>----{{node.nodeIP }}</p>
+                {% endfor %}
+            </div>
+            <div class="panel-footer">
+
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

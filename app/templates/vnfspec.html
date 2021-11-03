@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>VNF Specifications</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if imageName != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+                <div class="panel-body" id="clioutput">
+                    <p>sfs sf {{ imageName }} sfo image-mgmt image-ref {{ imageName }}</p>
+                    <p>sfs sf {{ imageName }} sfo sfo-metadata cpus {{ numCpus }} memory {{ ram }}</p>
+                    <p>sfs sf {{ imageName }} sfo network-interface mgmt network-type default</p>
+                    <p>sfs sf {{ imageName }} sfo network-interface LAN0 network-type vhost logical-port vnet-0</p>
+                    <p>sfs sf {{ imageName }} sfo network-interface WAN0 network-type vhost logical-port vnet-1</p>
+                    <p>sfs sf {{ imageName }} sf-operation state start</p>
+                </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

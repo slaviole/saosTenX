@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Add BGP Instance</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if lbkIP != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p>bgp instance {{ ASNum }}</p>
+                <p>apply</p>
+                <p>router-id {{ lbkIP }}</p>
+                <p>address-family vpnv4 unicast</p>
+                <p>apply</p>
+                <p>exit</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}j
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Delete A-Z EVP-Line</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if PEERLbkIPA != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                LOGS
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p><b>Node {{nodeNameA}} Status</b></p>
+                {% if pullResponseA.status_code == 200 %}
+                <p style="color:green;">REST API call successfull [200 OK]</p>
+                {% else %}
+                <p style="color:red;">API Call failed</p>
+                <p style="color:red;">Error Code: {{pullResponseA.text}}</p>
+                {% endif %}
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p><b>Node {{nodeNameZ}} Status</b></p>
+                {% if pullResponseZ.status_code == 200 %}
+                <p style="color:green;">REST API call successfull [200 OK]</p>
+                {% else %}
+                <p style="color:red;">API Call failed</p>
+                <p style="color:red;">Error Code: {{pullResponseZ.text}}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+{% endblock %}

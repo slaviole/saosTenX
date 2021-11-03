@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Vyos VNF Download</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if oobIP != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+              <p>files file vyos file-mgmt file-identifier vyos file-download-uri sftp://10.181.35.52/home/serge/images/vyos.qcow2 file-download-size 700 file-max-size 2000 checksum-uri sftp://10.181.35.52/home/serge/images/vyos.md5 checksum-type md5 username serge password ciena123</p>
+              <p>apply</p>
+              <p>exit</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

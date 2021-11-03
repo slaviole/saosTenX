@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+{% block pageHeader %}
+    <div class="container">
+          <h1>Data Port Creation</h1>
+    </div>
+    <br>
+{% endblock %}
+
+{% block inputBlock %}
+    {{ super() }}
+{% endblock %}
+
+ <br>
+ <br>
+
+{% block outputBlock %}
+   {% if logicalPort != None %}
+   <div class="container">
+       <div class="panel panel-primary">
+           <div class="panel-heading">
+               CLI COMMANDS
+           </div>
+           <div class="panel-body" id="clioutput">
+             <p>logical-ports logical-port {{ logicalPort }} admin-state enable</p>
+             <p>logical-ports logical-port {{ logicalPort }} mtu 9216</p>
+             <p>classifiers classifier vlan{{ vlanId }} filter-entry vtag-stack vtags 1 vlan-id {{ vlanId }}
+             <p>fds fd v{{ vlanId }} mode vpls</p>
+             <p>oc-if:interfaces interface int{{ logicalPort }}v{{ vlanId }} config name int{{logicalPort }}v{{ vlanId }} vrfName default cn-if:type ip mtu 1500 admin-status true underlay-binding config fd v{{ vlanId }}</p>
+             <p>oc-if:interfaces interface int{{ logicalPort}}v{{ vlanId }} ipv4 addresses address {{ dataPortIp }} config ip {{ dataPortIp }} prefix-length {{ dataPortMask }}</p>            
+             <p>isis instance ISIS1 interfaces interface int{{ logicalPort }}v{{ vlanId }} interface-type point-to-point</p>
+             <p>isis instance ISIS1 interfaces interface int{{ logicalPort }}v{{ vlanId }} level-type level-2</p>
+             <p>fps fp p{{ logicalPort }}v{{ vlanId }}</p>
+             <p>logical-port {{ logicalPort }}</p>
+             <p>fd-name v{{ vlanId }}</p>
+             <p>classifier-list-precedence {{ vlanId }}</p>
+             <p>classifier-list vlan{{ vlanId }}</p>
+             <p>stats-collection on</p>
+             <p>egress-l2-transform push-0x8100.{{ vlanId }}.7</p>
+             <p>vlan-stack 1</p>
+             <p>push-tpid tpid-8100</p>
+             <p>push-pcp pcp-7</p>
+             <p>push-vid {{ vlanId }}</p>
+             <p>apply</p>
+             <p>return</p>
+             <p>config</p>
+           </div>
+           <div class="panel-footer">
+               <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+           </div>
+       </div>
+       <div class="panel panel-danger">
+           <div class="panel-heading">
+               CLI COMMANDS
+           </div>
+           <div class="panel-body" id="optionalclioutput">
+             <p>mpls interfaces interface int{{ logicalPort }}v{{ vlanId }} label-switching true</p>
+             <p>bfd ip-sh sessions session int{{ logicalPort }}v{{ vlanId }} {{ peerIp}} source-addr {{ dataPortIp }} required-min-rx-interval 10000 desired-min-tx-interval 10000 local-multiplier 3 admin-down false</p> 
+             <p>return</p>
+           </div>
+           <div class="panel-footer">
+               <button class="btn-danger" data-clipboard-target=#optionalclioutput>Copy to Clipboard</button>
+           </div>
+       </div>
+   </div>
+   {% endif %}
+{% endblock %}
+   
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+<script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+
+{% endblock %}

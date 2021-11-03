@@ -1,0 +1,22 @@
+BUGS
+====
+- Test why not fully working on 5170. No PW.
+
+
+Template work
+===================
+- Create script to add serial numbers to ONU's.
+- Create XGS-PON Service Config
+
+
+
+New Features
+=============
+- Create Delete Script
+- Add Undo/Delete to configevpl push
+
+
+Misc
+====
+- Refactor to move Netconf and Rest Code to their own modules
+- Change nodeName from DB Pulldown to text entry

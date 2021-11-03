@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+            <h1>Config Backup</h1>
+        </div>
+        <br>
+    {% endblock %}
+     <br>
+     <br>
+
+    {% block inputBlock %}
+    {#        {{ super() }}  #}
+    <form method="post" class="form" role="form">
+        {{ form.csrf_token() }}
+        <div class="container well well-sm">
+            <div class="row">
+                <div class="form-group col-xs-10">
+                    {{ wtf.form_field(form.nodeNames, class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6">
+                    {{ wtf.form_field(form.projectName, class="form-control", placeholder="Project Name") }}
+                </div>
+                <div class="form-group col-xs-6">
+                    {{ wtf.form_field(form.suffix, class="form-control", placeholder="suffix") }}
+            </div>
+            <div class="row">
+                <div class="form-group" style="margin-left: 30px">
+                    {{ form.submit }}
+                </div>
+            </div>
+        </div>
+    </form>
+    
+    {% endblock %}
+
+
+
+    {#
+    {% block outputBlock %}
+        <div class="container">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Select Devices to Backup
+                </div>
+                <div class="panel-body" id="clioutput">
+                    {% for node in nodelist %}
+                        <p><b>{{ node.nodeName }}</b></p>
+                        <p>----{{node.nodeIP }}({{ node.userID }})</p>
+                    {% endfor %}
+                </div>
+                <div class="panel-footer">
+
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    #}
+{% endblock %}

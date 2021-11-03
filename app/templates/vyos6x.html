@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>6.x Vyos Config</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if wan0 != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+              <p>vlan create vlan {{ wan0 }}</p>
+              <p>vlan add vlan {{ wan0 }} port i2,2</p>
+              <p>vlan create vlan {{ lan0 }}</p>
+              <p>vlan add vlan {{ lan0 }} port i1,1</p>
+              <p>port set port 2 acceptable-frame-type tagged-only pvid {{ wan0 }}</p>
+              <p>port set port 1 acceptable-frame-type tagged-only pvid {{ lan0 }}</p>
+              <p>config save</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

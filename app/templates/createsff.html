@@ -1,0 +1,123 @@
+{% extends "base.html" %} {% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Create Service Chain</h1>
+        </div>
+        <br>
+    {% endblock %}
+     <br>
+     <br>
+     <script src="https:///unpkg.com/vue" ></script>
+
+     {# ---- Input Block ----#}
+     <div id="app" class="container">
+         <div class="well well-sm">
+             <form class="form-inline">
+                 <div class="form-group">
+                     <label for="fdName">Sffs Name</label>
+                     <input v-model="form.fdName" id="fdName"/>
+                 </div>
+                 <div class="form-group">
+                     <label for="fdMode">Mode</label>
+                     <input v-model="form.fdMode" id="fdMode"/>
+                 </div>
+                  <div class="form-group">
+                      <input type="button" v-on:click="toggleFD()" value="Create SFFs" class="btn btn-primary"/>
+                 </div>
+             </form>
+             <form class="form-inline" v-show="form.submittedFD">
+                 <br>
+                 <div class="form-group"> 
+                     <label for="fpName">Logical Port</label>
+                     <input v-model="form.fpName" id="fpName" />
+                 </div>
+                 <div class="form-group">
+                     <label for="classifierName">Classifier</label>
+                     <input v-model="form.classifierName" id="classifierName" />
+                 </div>
+                  <div class="form-group">
+                      <input type="button" v-on:click="toggleFP1()" value="Add Sffs interface" class="btn btn-primary"/>
+                 </div>
+             </form>
+              <form class="form-inline" v-show="form.submittedFP1">
+                 <br>
+                 <div class="form-group"> 
+                     <label for="fpName2">Logical Port</label>
+                     <input v-model="form.fpName2" id="fpName2" />
+                 </div>
+                 <div class="form-group">
+                     <label for="classifierName2">Classifier</label>
+                     <input v-model="form.classifierName2" id="classifierName2" />
+                 </div>
+                  <div class="form-group">
+                      <input type="button" v-on:click="toggleFP2()" value="Add Sffs interface" class="btn btn-primary"/>
+                 </div>
+
+            </form>
+         </div>
+
+        {# ---- Output Block ----#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+               <p v-show="form.submittedFD">sffs sff [[ form.fdName ]] mode [[ form.fdMode ]]</p>
+               <div v-show="form.submittedFP1">
+                 <p>sffs sff [[ form.fdName ]] interface [[ form.fdName ]]-[[ form.fpName ]] logical-port [[ form.fpName ]]</p>
+                 <p>sffs sff [[ form.fdName ]] interface [[ form.fdName ]]-[[ form.fpName ]] classifier-list [[ form.classifierName ]]</p>
+               </div>
+               <div v-show="form.submittedFP2">
+                 <p>sffs sff [[ form.fdName ]] interface [[ form.fdName ]]-[[ form.fpName2 ]] logical-port [[ form.fpName2 ]]</p>
+                 <p>sffs sff [[ form.fdName ]] interface [[ form.fdName ]]-[[ form.fpName2 ]] classifier-list [[ form.classifierName2 ]]</p>
+               </div>
+
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+
+
+     </div>
+
+ <script type="text/javascript" charset="utf-8">
+     var inputClassifier = new Vue({
+         el: "#app",
+         delimiters: ['[[', ']]'],
+         data: {
+             form: {
+                 submittedFD: false,
+                 submittedFP1: false,
+                 submittedFP2: false,
+                 fdMode: 'vpws',
+                 fdName: 'WAN0',
+                 fpName: "1",
+                 fpName2: "vnet-0",
+                 classifierName: "Untagged",
+                 classifierName2: "Untagged"
+             }
+         },
+         methods: {
+             toggleFD: function() {
+                 this.form.submittedFD = !this.form.submittedFD;
+             },
+             toggleFP1: function() {
+                 this.form.submittedFP1 = !this.form.submittedFP1;
+             },
+             toggleFP2: function() {
+                 this.form.submittedFP2 = !this.form.submittedFP2;
+             }
+         }
+     })
+ </script>
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

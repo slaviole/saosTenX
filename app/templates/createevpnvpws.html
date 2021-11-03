@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Create EVPN VPWS</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if cVid != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p class="text-danger">#Needs to be tested with a UniPort that is up otherwise the routes may not be advertized</p>
+                <p>bgp instance {{ ASNum }} address-family l2vpn evpn</p>
+                <p>bgp instance {{ ASNum }} peer {{ PEERLbkIP }} remote-as {{ ASNum }}</p>
+                <p>bgp instance {{ ASNum }} peer {{ PEERLbkIP }} update-source-interface lbk0</p>
+                <p>bgp instance {{ ASNum }} peer {{ PEERLbkIP }} address-family l2vpn evpn activate true</p>
+                <p>apply</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>classifiers classifier vlan{{ cVid }} filter-entry vtag-stack vtags 1 vlan-id {{ cVid }}</p>
+                <p>fds fd evpnFD{{ cVid }} mode evpn-vpws</p>
+                <p>fps fp evpnFP{{ cVid }}_{{ uniPort }}</p>
+                <p>stats-collection on</p>
+                <p>fd-name evpnFD{{ cVid }}</p>
+                <p>logical-port {{ uniPort }}</p>
+                <p>classifier-list-precedence {{ cVid }}</p>
+                <p>classifier-list vlan{{ cVid }}</p>
+                <p>mtu-size 2000</p>
+                <p>egress-l2-transform push-vid-{{ cVid }}</p>
+                <p>vlan-stack 1</p>
+                <p>push-tpid tpid-8100</p>
+                <p>push-vid {{ cVid }}</p>
+                <p>apply</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>evpn evpn-instances evpn-instance {{ cVid }}</p>
+                <p>vpws-cross-connect-fd evpnFD{{ nodalIPoctet }}</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

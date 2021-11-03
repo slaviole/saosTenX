@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Get 10x Configs</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if cfgObj != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+               NODE CONFIG
+            </div>
+            <div class="panel-body" id="clioutput">
+                {% if cfgObj == 'classifiers' %}
+                    {% for clsfr in TenXObj.rpc_reply.data.classifiers.classifier %}
+                        <p><b>Classifer Name:    {{ clsfr.name.cdata }}</b></p>
+                        {% if clsfr.filter_entry.vtags %}
+                            <p>Vlan-ID: {{ clsfr.filter_entry.vtags.vlan_id.cdata }}
+                        {% endif %}
+                        <br>
+                    {% endfor %}
+                {% endif %}
+
+                {% if cfgObj == 'fds' %}
+                    {% for fd in TenXObj.rpc_reply.data.fds.fd %}
+                        <p><b>Forwarding-Domain:    {{ fd.name.cdata }}</b></p>
+                        <p>SFF Mode: {{ fd.mode.cdata }}</p>
+                        <br>
+                    {% endfor %}
+                {% endif %}
+
+                {% if cfgObj == 'fps' %}
+                    {% for fp in TenXObj.rpc_reply.data.fps.fp %}
+                        <p><b>Flow-Point:    {{ fp.name.cdata }}</b></p>
+                        <p>Forwarding-Domain: {{ fp.fd_name.cdata }}</p>
+                        <p>Logical-Port: {{ fp.logical_port.cdata }}</p>
+                        <p>MTU Size: {{ fp.mtu_size.cdata }}</p>
+                        <p>Classifier-List: {{ fp.classifier_list.cdata }}</p>
+                        <br>
+                    {% endfor %}
+                {% endif %}
+
+                {% if cfgObj == 'interfaces' %}
+                    {% for interfaces in TenXObj.rpc_reply.data.interfaces.interface %}
+                        {% if interfaces.config.type.cdata != 'ettp' %}
+                                <p><b>Interface:    {{ interfaces.name.cdata }}</b></p>
+                                <p>-    MTU:    {{ interfaces.config.mtu.cdata }}</p>
+                                {% if interfaces.ipv4.addresses %}
+                                <p>-    IP address:    {{ interfaces.ipv4.addresses.address.ip.cdata }}/{{ interfaces.ipv4.addresses.address.config.prefix_length.cdata }}</p>
+                                <br>
+                                {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+            </div>
+            <div class="panel-footer">
+                
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="../static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Create L3 VPN</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if vrfIP != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p class="text-danger">#Needs to be tested with a UniPort that is up otherwise the routes won't be advertized</p>
+                <p>vrf vrf{{ cVid }}</p>
+                <p>exit</p>
+                <p>bgp instance {{ ASNum }} vrf vrf{{ cVid }}</p>
+                <p>route-target {{ rtTarget}} direction both</p>
+                <p>route-distinguisher {{ rtDist }}</p>
+                <p>vrf-address-family ipv4 unicast redistribute connected</p>
+                <p>apply</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>classifiers classifier vlan{{ cVid }} filter-entry vtag-stack vtags 1 vlan-id {{ cVid }}</p>
+                <p>fds fd vrf{{ cVid }} mode vpls</p>
+                <p>fps fp vrf{{ cVid }}_{{ uniPort }}</p>
+                <p>stats-collection on</p>
+                <p>fd-name vrf{{ cVid }}</p> {# Again, why the _port# # ???#}
+                <p>logical-port {{ uniPort }}</p>
+                <p>classifier-list-precedence {{ cVid }}</p>
+                <p>classifier-list vlan{{ cVid }}</p>
+                <p>mtu-size 9216</p>
+                <p>egress-l2-transform push-vid-{{ cVid }}</p>
+                <p>vlan-stack 1</p>
+                <p>push-tpid tpid-8100</p>
+                <p>push-vid {{ cVid }}</p>
+                <p>apply</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>exit</p>
+                <p>oc-if:interfaces interface vrf{{ cVid }}_{{ uniPort }} config name vrf{{ cVid }}_{{ uniPort }} vrfName vrf{{ cVid }} cn-if:type ip mtu 1500 admin-status true underlay-binding config fd vrf{{ cVid }}</p>
+                <p>oc-if:interfaces interface vrf{{ cVid }}_{{ uniPort }} ipv4 addresses address {{ vrfIP }} config ip {{ vrfIP }} prefix-length {{ vrfMask }}</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}j
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Delete EVP-Line</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }}
+    {% endblock %}
+
+     <br>
+     <br>
+
+
+
+    {% block outputBlock %}
+    {% if PEERLbkIP != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                LOGS
+            </div>
+            <div class="panel-body" id="clioutput">
+                {% if pullResponse.status_code == 200 %}
+                <p style="color:green;">REST API call successfull [200 OK]</p>
+                {% else %}
+                <p style="color:red;">API Call failed</p>
+                <p style="color:red;">Error Code: {{pullResponse.text}}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+
+{% endblock %}

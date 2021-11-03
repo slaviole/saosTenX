@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Add Segment-Routing and TI-LFA</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if lbkIP != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS - SEGMENT-ROUTING
+            </div>
+            <div class="panel-body" id="clioutput">
+              <p>segment-routing srgb 16000 23999</p>
+              <p>segment-routing connected-prefix-sid-map {{ lbkIP }}/32 value-type index start-sid {{ startSid }}</p>
+              <p>segment-routing connected-prefix-sid-map {{ lbkIP }}/32 interface lbk0</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                CLI COMMANDS - TI-LFA
+            </div>
+            <div class="panel-body" id="optionalclioutput">
+                <p>isis instance ISIS1 fast-reroute level level-{{isisLevel}} lfa per-prefix-enable true</p>
+                <p>isis instance ISIS1 fast-reroute level level-{{isisLevel}} lfa ti-lfa per-prefix-enable true</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-warning" data-clipboard-target=#optionalclioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS10x{% endblock %}j
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Config A-Z EVP-Line</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+    {# {{ super() }} #}
+    <form method="post" class="form" role="form">
+        {{ form.csrf_token() }}
+        <div class="container well well-sm">
+            <div class="row">
+                <h4 style="margin-left: 10px"> Node A </h4>
+                <div class="form-group col-xs-4">
+                    {{ wtf.form_field(form.nodeNameA, class='form-control') }}
+                </div>
+                <div class="form-group col-xs-4">
+                    {{ wtf.form_field(form.uniPortA, class='form-control', placeholder="Logical Port A") }}
+                </div>
+                <div class="form-group col-xs-4">
+                    {{ wtf.form_field(form.PEERLbkIPA, class='form-control', placeholder="192.168.127.20") }}
+                </div>
+            </div>
+            <div class="row">
+                <h4 style="margin-left: 10px"> Node Z </h4>
+                <div class="form-group col-xs-4">
+                    {{ wtf.form_field(form.nodeNameZ, class='form-control') }}
+                </div>
+                <div class="form-group col-xs-4">
+                    {{ wtf.form_field(form.uniPortZ, class='form-control', placeholder="Logical Port A") }}
+                </div>
+                <div class="form-group col-xs-4">
+                    {{ wtf.form_field(form.PEERLbkIPZ, class='form-control', placeholder="192.168.127.20") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-4">
+                    {{ wtf.form_field(form.cVid, class='form-control') }}
+                </div>
+                <div class="form-group col-xs-4" style="margin-top: 30px">
+                    {{ form.submit }}
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if PEERLbkIPA != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                LOGS
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p><b>Node {{nodeNameA}} Status</b></p>
+                {% if pushResponseA.status_code == 200 %}
+                <p style="color:green;">REST API call successfull [200 OK]</p>
+                {% else %}
+                <p style="color:red;">API Call failed</p>
+                <p style="color:red;">Error Code: {{pushResponseA.text}}</p>
+                {% endif %}
+            </div>
+            <div class="panel-body" id="clioutput">
+                <p><b>Node {{nodeNameZ}} Status</b></p>
+                {% if pushResponseZ.status_code == 200 %}
+                <p style="color:green;">REST API call successfull [200 OK]</p>
+                {% else %}
+                <p style="color:red;">API Call failed</p>
+                <p style="color:red;">Error Code: {{pushResponseZ.text}}</p>
+                {% endif %}
+                {#<div class="panel-body" id="clioutput">
+                 <a href="/undoevplaz" class="btn btn-danger">Undo/Delete</a>
+                </div>#}
+           </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+{% endblock %}

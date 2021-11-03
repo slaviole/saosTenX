@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SAOS{% endblock %}
+
+{% block content %}
+    {% block pageHeader %}
+        <div class="container">
+              <h1>Configuration of the OOB Mgmt port</h1>
+        </div>
+        <br>
+    {% endblock %}
+
+    {% block inputBlock %}
+        {{ super() }} 
+    {% endblock %}
+
+     <br>
+     <br>
+
+    {% block outputBlock %}
+    {% if oobIP != None %}
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                CLI COMMANDS
+            </div>
+            <div class="panel-body" id="clioutput">
+              <p>dhcp-client client mgmtbr0 admin-enable false</p>
+              <p>oc-if:interfaces interface mgmtbr0 ipv4 addresses address {{ oobIP }} config ip {{ oobIP }} prefix-length {{oobSubnet }}</p>
+              <p>rib vrf default ipv4 {{defaultRoute}}/{{defaultRouteSubnet}} next-hop {{ oobGateway }}</p>
+              <p>exit</p>
+              <p>exit</p>
+              <p>exit</p>
+              <p>exit</p>
+              <p>exit</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
+<script src="static/clipboard.js-master/dist/clipboard.min.js"></script>
+ <script type="text/javascript">
+    new ClipboardJS('button');
+</script>
+{% endblock %}
