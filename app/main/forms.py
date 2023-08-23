@@ -89,6 +89,16 @@ class CREATEEvpnVpws(FlaskForm):
     rtDist = StringField("Route Distinguisher:", validators=[DataRequired()], render_kw={'placeholder':'0:54032:203'})
     submit = SubmitField('Submit')
 
+# TELUS Forms for CSR Config File Generation
+
+class CSR5130(FlaskForm):
+    serialNum  = StringField("Serial Number:", validators=[DataRequired()], render_kw={'placeholder':'m97964be'})
+    hostName = StringField("Hostname:", validators=[DataRequired()], render_kw={'placeholder':'5130_10'})
+    mgmtIP  = StringField("Node IP:", validators=[DataRequired(), IPAddress()], render_kw={'placeholder':'10.183.204.122'})
+    nodeSubnet = StringField("IP Mask:", validators=[DataRequired(), Length(min=1,max=2)], render_kw={'placeholder':'22'})
+    defaultGateway = StringField("Default Gateway:", validators=[DataRequired(), IPAddress()], render_kw={'placeholder':'10.183.204.1'})
+    submit = SubmitField('Submit')
+
 
 # Virtualized Edge Forms
 class BASE6x(FlaskForm):
@@ -198,6 +208,15 @@ class CONFIGevplAZ(FlaskForm):
     PEERLbkIPZ = StringField("Peer IP Z:", validators=[DataRequired(), IPAddress()], render_kw={'placeholder':'192.168.2.6'})
     cVid = IntegerField("Vlan ID:", validators=[DataRequired(), NumberRange(min=1,max=4095,message="Must be an integer between 1 and 4095")], render_kw={'placeholder':'1000'})
     submit = SubmitField('Submit')
+
+# Flex Form
+#===================
+
+class CreateFlexE(FlaskForm):
+    uniPort1 = SelectField("1st Client Port in group of 4:", choices=[('1', '1'), ('6', '6'), ('11', '11'), ('15', '15')], validators=[DataRequired()])
+    flexEPort = SelectField("FlexE port:", choices=[('33', '33'), ('34', '34'), ('35', '35'), ('36', '36')], validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 
 # S3 Lab Admin
 #==============

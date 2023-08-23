@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "https://10.181.35.51/configmgmt/api/v1/jobs"
+url = "https://10.181.37.53/configmgmt/api/v1/jobs"
 
 payload = json.dumps({
   "data": {
@@ -75,7 +75,7 @@ payload = json.dumps({
 })
 headers = {
   'Content-Type': 'application/json',
-  'Authorization': 'Bearer a3467cb02c1302ad2e84',
+  'Authorization': 'Bearer 207b013551755ac808f2',
   'Accept': 'application/json',
   'Cookie': 'uac.csrftoken=K1GQJ1uaJdJhVmUFsjnYVpJMkdTTWxNE'
 }

@@ -3,7 +3,7 @@ import requests
 
 def pushevpl(nodeName, uniPort, cVid, PEERLbkIP):
 
-    url = "https://10.181.35.51/configmgmt/api/v1/jobs"
+    url = "https://10.181.37.53/configmgmt/api/v1/jobs"
 
     prepayload = {
     "data": {
@@ -80,7 +80,7 @@ def pushevpl(nodeName, uniPort, cVid, PEERLbkIP):
 
     headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer 2337d80c76737961da9f',
+    'Authorization': 'Bearer 207b013551755ac808f2',
     'Accept': 'application/json',
     'Cookie': 'uac.csrftoken=K1GQJ1uaJdJhVmUFsjnYVpJMkdTTWxNE'
     }
@@ -94,7 +94,7 @@ def pushevpl(nodeName, uniPort, cVid, PEERLbkIP):
 
 def pullevpl(nodeName, uniPort, cVid, PEERLbkIP):
     print("hit delete function")
-    url = "https://10.181.35.51/configmgmt/api/v1/jobs"
+    url = "https://10.181.37.53/configmgmt/api/v1/jobs"
 
     payload = json.dumps({
     "data": {
@@ -157,7 +157,7 @@ def pullevpl(nodeName, uniPort, cVid, PEERLbkIP):
     })
     headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer e4655c09b56d0ec3f6f3',
+    'Authorization': 'Bearer 207b013551755ac808f2',
     'Accept': 'application/json',
     'Cookie': 'uac.csrftoken=K1GQJ1uaJdJhVmUFsjnYVpJMkdTTWxNE'
     }

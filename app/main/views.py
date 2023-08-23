@@ -11,6 +11,9 @@ from . import restModule
 from mytenxtemplates import *
 from ncclient import manager
 import untangle
+import os
+from jinja2 import Environment, FileSystemLoader
+
 
 # 10.x Startup Views
 # ==================
@@ -78,7 +81,7 @@ def EXPANDIP(IPaddress):
 
 def pushevpl(nodeName, uniPort, cVid, PEERLbkIP):
 
-    url = "https://10.181.35.51/configmgmt/api/v1/jobs"
+    url = "https://10.181.37.53/configmgmt/api/v1/jobs"
 
     prepayload = {
     "data": {
@@ -155,7 +158,7 @@ def pushevpl(nodeName, uniPort, cVid, PEERLbkIP):
 
     headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer e4655c09b56d0ec3f6f3',
+    'Authorization': 'Bearer 207b013551755ac808f2',
     'Accept': 'application/json',
     'Cookie': 'uac.csrftoken=K1GQJ1uaJdJhVmUFsjnYVpJMkdTTWxNE'
     }
@@ -169,7 +172,7 @@ def pushevpl(nodeName, uniPort, cVid, PEERLbkIP):
 
 def pullevpl(nodeName, uniPort, cVid, PEERLbkIP):
     print("hit delete function")
-    url = "https://10.181.35.51/configmgmt/api/v1/jobs"
+    url = "https://10.181.37.53/configmgmt/api/v1/jobs"
 
     payload = json.dumps({
     "data": {
@@ -232,7 +235,7 @@ def pullevpl(nodeName, uniPort, cVid, PEERLbkIP):
     })
     headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer e4655c09b56d0ec3f6f3',
+    'Authorization': 'Bearer 207b013551755ac808f2',
     'Accept': 'application/json',
     'Cookie': 'uac.csrftoken=K1GQJ1uaJdJhVmUFsjnYVpJMkdTTWxNE'
     }
@@ -389,6 +392,52 @@ def setettps():
         portSpeed = form.portSpeed.data
     return render_template('setEttps.html', form=form, portSpeed=portSpeed, logicalPort=logicalPort)
 
+# TELUS Config Generation Script
+
+PATH = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_ENVIRONMENT = Environment(
+    autoescape=False,
+    loader=FileSystemLoader(os.path.join(PATH, 'templates')),
+    trim_blocks=False)
+
+def render_config(template_filename, context):
+    return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
+
+def create_config_xml():
+    fname = "output.html"
+    urls = ['http://example.com/1', 'http://example.com/2', 'http://example.com/3']
+    context = {
+        'urls': urls
+    }
+    #
+    with open(fname, 'w') as f:
+        html = render_template('index.html', context)
+        f.write(html)
+
+
+@main.route('/csr5130', methods=['GET', 'POST'])
+def csr5130():
+    serialNum = None
+    hostName = None
+    mgmtIP = None
+    nodeSubnet = None
+    defaultGateway = None
+    form = CSR5130()
+    if form.validate_on_submit():
+            serialNum = form.serialNum.data + '.xml',
+            hostName = form.hostName.data,
+            mgmtIP = form.mgmtIP.data,
+            nodeSubnet = form.nodeSubnet.data,
+            defaultGateway = form.defaultGateway.data
+    try:
+        with open("serialNum22.xml", 'w') as f:
+            xmlcfg = render_template('cn5130.j2', serialNum=serialNum, hostName=hostName[0], mgmtIP=mgmtIP[0], nodeSubnet=nodeSubnet[0], defaultGateway=defaultGateway[0])
+            f.write(xmlcfg)
+    except:
+        pass
+        #return render_template('404.html')
+
+    return render_template('csr5130.html', form=form, hostName=hostName[0], mgmtIP=mgmtIP[0], nodeSubnet=nodeSubnet[0], defaultGateway=defaultGateway)
 
 
 
@@ -687,6 +736,11 @@ def showcfg():
             TenXObj = ncModule.get_nc_obj(nodeToDisplay,cfgObj)
         except:
             return render_template('404.html')
+    print(cfgObj)
+    #for clsfr in TenXObj.rpc_reply.data.classifiers.classifier:
+    #    if clsfr.filter_entry.vtags:
+    #        print(clsfr)
+    #        print(clsfr.filter_entry.vtags.vland_id.cdata)
     return render_template('showCfg.html', form=form, cfgObj=cfgObj, TenXObj = TenXObj)
 
 @main.route('/addnode', methods=['GET', 'POST'])
@@ -720,7 +774,7 @@ def deletenode():
 
 
 def edit_nc_obj(nc_creds, template):
-    ''' Takes D-NFVI server login credentials, makes a Netconf get for all config and oper data.
+    ''' Takes server login credentials, makes a Netconf get for all config and oper data.
         Returns an Untangle object with the parsed xml tree.
     '''
     print()
@@ -746,15 +800,23 @@ def nc_createclassifier():
     vlanId = None
     form = CREATEclassifier()
     if form.validate_on_submit():
-        nodeToConfig = Node.query.filter_by(nodeName=str(form.nodeName.data)).first()
+        node = Node.query.filter_by(nodeName=str(form.nodeName.data)).first()
+        print(node)
+        print(node.nodeIP)
         vlanId = form.vlanId.data
         vlanIdDict = {'operation': 'replace', 'vlanid': vlanId}
         print(vlanIdDict)
         rendered_template = editClassifiers.render(vlanIdDict)
         print(rendered_template)
-        creds = {'ip': "10.181.34.2",
-        'user': 'user',
-        'pwd': 'ciena123'
-        }
-        dnfvi_obj = edit_nc_obj(creds, rendered_template)
+        nodeIP = node.nodeIP
+        userID = node.userID
+        password = node.password
+        creds = {'ip': nodeIP,
+                'user': userID,
+                'pwd': password}
+        try:
+            TenX_obj = edit_nc_obj(creds, rendered_template)
+        except:
+            return render_template('404.html')
+        return redirect(url_for('.nc_createclassifier'))
     return render_template('nc_createclassifier.html', form=form, nodelist=Node.query.all())
