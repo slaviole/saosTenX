@@ -20,23 +20,6 @@
 
     {% block outputBlock %}
     {% if hostName != None %}
-    <div class="container">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                CLI COMMANDS
-            </div>
-            <div class="panel-body" id="clioutput">
-              <p>system set host-name {{ nodeName }}</p>
-              <p>dhcp client disable</p>
-              <p>interface remote set ip {{ nodeIP }}/{{ nodeSubnet }} vlan 127 gateway {{ oobIP }} {{ defaultGateway }}</p>
-              <p>port set port 4,i4 acceptable-frame-type untagged-only pvid 127</p>
-              <p>config save</p>
-            </div>
-            <div class="panel-footer">
-                <button class="btn-primary" data-clipboard-target=#clioutput>Copy to Clipboard</button>
-            </div>
-        </div>
-    </div>
     {% endif %}
     {% endblock %}
 

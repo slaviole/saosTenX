@@ -3844,7 +3844,7 @@
   </subsystems>
   <system xmlns="http://openconfig.net/yang/system">
     <config>
-    <hostname>cartoon</hostname>
+    <hostname>5170_93</hostname>
       <description xmlns="http://www.ciena.com/ns/yang/ciena-system">5130</description>
     </config>
     <aaa>

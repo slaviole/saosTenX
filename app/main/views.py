@@ -425,19 +425,20 @@ def csr5130():
     form = CSR5130()
     if form.validate_on_submit():
             serialNum = form.serialNum.data + '.xml',
+            print(serialNum[0])
             hostName = form.hostName.data,
             mgmtIP = form.mgmtIP.data,
             nodeSubnet = form.nodeSubnet.data,
             defaultGateway = form.defaultGateway.data
     try:
-        with open("serialNum22.xml", 'w') as f:
+        with open(serialNum[0], 'w') as f:
             xmlcfg = render_template('cn5130.j2', serialNum=serialNum, hostName=hostName[0], mgmtIP=mgmtIP[0], nodeSubnet=nodeSubnet[0], defaultGateway=defaultGateway[0])
             f.write(xmlcfg)
     except:
         pass
         #return render_template('404.html')
 
-    return render_template('csr5130.html', form=form, hostName=hostName[0], mgmtIP=mgmtIP[0], nodeSubnet=nodeSubnet[0], defaultGateway=defaultGateway)
+    return render_template('csr5130.html', form=form, hostName=hostName, mgmtIP=mgmtIP, nodeSubnet=nodeSubnet, defaultGateway=defaultGateway)
 
 
 
